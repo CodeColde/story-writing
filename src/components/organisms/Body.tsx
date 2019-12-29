@@ -5,6 +5,7 @@ import { Story } from 'redux-state/story/types';
 import Title from 'components/molecules/Title';
 import Content from 'components/molecules/Content';
 import styled from 'styled-components';
+import CopyButton from 'components/molecules/CopyButton';
 
 interface Props {
     currentStory: Story;
@@ -14,6 +15,7 @@ const Body: React.FC<Props> = ({ currentStory }) => {
     return (
         <Container>
             {!currentStory && <h1>Start your story here!</h1>}
+            <CopyButton story={currentStory} />
             <Title />
             <Content />
         </Container>
