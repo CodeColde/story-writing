@@ -7,21 +7,23 @@ interface Props {
 }
 
 const CopyButton: React.FC<Props> = ({ story }) => {
-    const [copySuccess, setCopySuccess] = React.useState(false);
     const copyRef = React.useRef<HTMLTextAreaElement>(null);
-
-    React.useEffect(() => {
-        if (copySuccess) {
-            console.log('Copy Successful');
-            setCopySuccess(false);
-        }
-    }, [copySuccess]);
 
     const copyStory = () => {
         if (copyRef.current) {
-            copyRef.current.select();
-            document.execCommand('copy');
-            setCopySuccess(true);
+            console.log(copyRef.current);
+            try {
+                copyRef.current.focus();
+                copyRef.current.select();
+                document.execCommand('copy');
+                console.log('Copy Successful');
+            }
+            catch (e) {
+                console.log(e);
+            }
+            finally {
+                console.log('Copy Completed');
+            }
         }
     }
     const title = story.title ? `${story.title}\n` : '';
@@ -32,7 +34,7 @@ const CopyButton: React.FC<Props> = ({ story }) => {
     return (
         <>
             <Copy onClick={copyStory}>Copy</Copy>
-            <CopyTemplate ref={copyRef}>{storyToCopy}</CopyTemplate>
+            <CopyTemplate ref={copyRef} defaultValue={storyToCopy} />
         </>
     );
 };
@@ -40,7 +42,10 @@ const CopyButton: React.FC<Props> = ({ story }) => {
 export default CopyButton;
 
 const CopyTemplate = styled.textarea`
-    display: none;
+    /* display: none; */
+    position: absolute;
+    opacity:0;
+    z-index:-999;
 `;
 
 const Copy = styled.button`
