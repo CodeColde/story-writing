@@ -15,7 +15,7 @@ interface Props {
     currentStory: Story;
 }
 
-const Title: React.FC<Props> = ({ login, currentStory, createStoryAction, updateStoryAction }) => {
+const StoryTitle: React.FC<Props> = ({ login, currentStory, createStoryAction, updateStoryAction }) => {
     const [currId, setId] = React.useState(0);
     const [title, setTitle] = React.useState(currentStory.title ? currentStory.title : '');
     const [author, setAuthor] = React.useState(login.username ? login.username : 'anonymous');
@@ -96,7 +96,7 @@ export default connect(
         createStoryAction,
         updateStoryAction
     }
-)(Title);
+)(StoryTitle);
 
 const TitleField = styled.input`
     font-size: 3rem;

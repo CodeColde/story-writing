@@ -1,5 +1,5 @@
 import React from 'react';
-import NavMenu from './organisms/NavMenu';
+import NavMenu from './molecules/NavMenu';
 import Body from './organisms/Body';
 import styled from 'styled-components';
 import StorySettings from './organisms/StorySettings';

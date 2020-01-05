@@ -17,7 +17,7 @@
 [x] - Update regularly (5 secs check if update is needed, only when communicating with backend)
 [x] - Remove Stories when account gets deleted
 [x] - Update stories' author's username if changed
-[ ] - Copy story to clipboard and paste in word document
+[x] - Copy story to clipboard and paste in word document
 
 ## Markdown and HTML Writing
 [ ] - Markdown writing
@@ -25,6 +25,10 @@
 [ ] - Save as markdown, show as HTML
 [ ] - Placeholder for Markdown Elements if say ## has no content
 [ ] - Story Side Navigation
+
+## Development Tools
+[x] - Styleguide Page
+[x] - Development Mode
 
 ## Refinement
 [ ] - Styling

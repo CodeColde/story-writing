@@ -8,33 +8,54 @@ interface Props {
 
 const CopyButton: React.FC<Props> = ({ story }) => {
     const copyRef = React.useRef<HTMLTextAreaElement>(null);
+    const [copyState, setCopyState] = React.useState(false);
 
-    const copyStory = () => {
-        if (copyRef.current) {
-            console.log(copyRef.current);
-            try {
-                copyRef.current.focus();
-                copyRef.current.select();
-                document.execCommand('copy');
-                console.log('Copy Successful');
-            }
-            catch (e) {
-                console.log(e);
-            }
-            finally {
-                console.log('Copy Completed');
-            }
-        }
-    }
     const title = story.title ? `${story.title}\n` : '';
     const author = story.author ? `${story.author}\n` : '';
     const content = story.content ? `${story.content}` : '';
     const storyToCopy = `${title}${author}${content}`;
 
+    React.useEffect(() => {
+        if (copyState) {
+            if (copyRef.current) {
+                console.log(copyRef.current);
+                try {
+                    copyRef.current.focus();
+                    copyRef.current.select();
+                    document.execCommand('copy');
+                }
+                catch (e) {
+                    console.log(`Copy Failed: ${e}`);
+                    setCopyState(false);
+                }
+                finally {
+                    setCopyState(false);
+                    console.log(`${story.title} has been copied to the clipboard`);
+                }
+            }
+        }
+    }, [story, copyState, copyRef]);
+
+    const onClick = () => {
+        if (!navigator.clipboard) {
+            setCopyState(true);
+            return;
+        }
+        try {
+            navigator.clipboard.writeText(storyToCopy)
+        }
+        catch (e) {
+            console.error("Copy failed.", e);
+        }
+        finally {
+            console.log(`${story.title} has been copied to the clipboard`);
+        }
+    }
+
     return (
         <>
-            <Copy onClick={copyStory}>Copy</Copy>
-            <CopyTemplate ref={copyRef} defaultValue={storyToCopy} />
+            <Copy onClick={onClick}>Copy</Copy>
+            {copyState && <CopyTemplate ref={copyRef} defaultValue={storyToCopy} />}
         </>
     );
 };

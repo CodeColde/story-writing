@@ -92,7 +92,6 @@ const ContentField = styled.textarea`
     width: 100%;
     border: 0;
     outline: 0;
-    flex: 1;
 
     &::placeholder {
         color: ${theme.colors.black};

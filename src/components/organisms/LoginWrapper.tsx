@@ -2,9 +2,9 @@ import React from 'react';
 import LoginButton from 'components/atoms/LoginButton';
 import { connect } from 'react-redux';
 import { AppState } from 'redux-state';
-import { loginAction, logout } from 'redux-state/login/actions';
+import { loginAction } from 'redux-state/login/actions';
 import { Users } from 'redux-state/users/types';
-import { LoginAction, LogoutAction, UserLogin } from 'redux-state/login/types';
+import { LoginAction, UserLogin } from 'redux-state/login/types';
 import LoginForm from 'components/molecules/LoginForm';
 import SignupForm from 'components/molecules/SignupForm';
 import styled from 'styled-components';
@@ -15,10 +15,9 @@ interface Props {
     users: Users;
     login: UserLogin;
     loginAction: LoginAction;
-    logout: LogoutAction;
 }
 
-const LoginWrapper: React.FC<Props> = ({ login, logout }) => {
+const LoginWrapper: React.FC<Props> = ({ login }) => {
     const [showForm, setShowForm] = React.useState(false);
     const [showSignup, setShowSignup] = React.useState(false);
 
@@ -63,8 +62,7 @@ const mapStateToProps = ({ login, users }: AppState) => ({
 export default connect(
     mapStateToProps,
     {
-        loginAction,
-        logout
+        loginAction
     }
 )(LoginWrapper);
 

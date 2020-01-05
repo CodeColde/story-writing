@@ -2,10 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { AppState } from 'redux-state';
 import { Story } from 'redux-state/story/types';
-import Title from 'components/molecules/Title';
-import Content from 'components/molecules/Content';
+import Title from 'components/molecules/StoryTitle';
+// import Content from 'components/molecules/Content';
 import styled from 'styled-components';
 import CopyButton from 'components/molecules/CopyButton';
+import Editor from 'components/containers/Editor';
 
 interface Props {
     currentStory: Story;
@@ -17,7 +18,8 @@ const Body: React.FC<Props> = ({ currentStory }) => {
             {!currentStory && <h1>Start your story here!</h1>}
             <CopyButton story={currentStory} />
             <Title />
-            <Content />
+            {/* <Content /> */}
+            <Editor />
         </Container>
     )
 }
