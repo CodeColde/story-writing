@@ -8,11 +8,7 @@ interface Props {
 }
 
 const Preview: React.FC<Props> = ({ currentStory }) => {
-    return (
-        <div>
-            {currentStory.content}
-        </div>
-    )
+    return <div>{currentStory.content}</div>;
 }
 
 export default connect(

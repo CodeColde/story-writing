@@ -4,13 +4,18 @@ import ContentEditable from 'react-contenteditable';
 import styled, { keyframes, css } from 'styled-components';
 import { connect } from 'react-redux';
 import { AppState } from 'redux-state';
-import { Story } from 'redux-state/story/types';
+import { createStoryAction, updateStoryAction } from 'redux-state/story/actions';
+import { CreateStoryAction, Story, UpdateStoryAction } from 'redux-state/story/types';
+import formatDate from 'utils/formatDate';
 
 interface Props {
     currentStory: Story;
+    createStoryAction: CreateStoryAction;
+    updateStoryAction: UpdateStoryAction;
 }
 
-const Writer: React.FC<Props> = ({ currentStory }) => {
+const Writer: React.FC<Props> = ({ currentStory, createStoryAction, updateStoryAction }) => {
+    const [currId, setId] = React.useState(0);
     const [content, setContent] = React.useState((currentStory && currentStory.content) || '');
     const [placeholderSelect, setPlaceholderSelect] = React.useState(false);
     const [init, setInit] = React.useState(false);
@@ -23,6 +28,54 @@ const Writer: React.FC<Props> = ({ currentStory }) => {
             setInit(true);
         }
     }, [init]);
+
+    // New Story
+    React.useEffect(() => {
+        if (!currentStory.id && content.length > 0) {
+            setContent('');
+            setId(0);
+        }
+    }, [currentStory, content]);
+
+    // Switches story to another story
+    React.useEffect(() => {
+        if (currentStory.id && currId !== currentStory.id) {
+            setId(currentStory.id);
+            setContent(currentStory.content);
+        }
+    }, [currentStory, currId]);
+
+    // Reset story
+    React.useEffect(() => {
+        if (!currentStory.id && content.length > 0 && !currId) {
+            setContent('');
+        }
+    }, [currentStory, currId, content]);
+
+    // Creating a new story when a user started writing their story
+    React.useEffect(() => {
+        if (!currentStory && content.length === 1 && !currId) {
+            createStoryAction({
+                author: 'anonymous',
+                title: '',
+                createdAt: formatDate(),
+                lastUpdated: formatDate(),
+                content
+            });
+        }
+    }, [content, currId, createStoryAction, currentStory]);
+
+    // Writing story
+    React.useEffect(() => {
+        if (currId === currentStory.id && content !== currentStory.content) {
+            updateStoryAction({
+                ...currentStory,
+                id: currId,
+                lastUpdated: formatDate(),
+                content
+            });
+        }
+    }, [currentStory, updateStoryAction, currId, content]);
 
     // If unfocused, format content
     React.useEffect(() => {
@@ -77,29 +130,32 @@ const Writer: React.FC<Props> = ({ currentStory }) => {
                     Start Writing Here...
                 </Placeholder>
             }
-            <Editor
+            <EditorWrapper
+                contentIsString={content.indexOf('<') < 0}
                 hasContent={content.length > 0}
-                innerRef={editorRef}
-                html={content}
-                dangerouslySetInnerHTML={{__html: content}}
-                onFocus={() => setFocus(true)}
-                onBlur={() => {
-                    setPlaceholderSelect(false)
-                    setFocus(false);
-                }}
-                onChange={(e) => setContent(e.target.value)}
-            />
-            {process.env.NODE_ENV === 'development' && content && (
-                <div>
-                    {content}
-                </div>
-            )}
+            >
+                <Editor
+                    innerRef={editorRef}
+                    html={content}
+                    dangerouslySetInnerHTML={{__html: content}}
+                    onFocus={() => setFocus(true)}
+                    onBlur={() => {
+                        setPlaceholderSelect(false)
+                        setFocus(false);
+                    }}
+                    onChange={(e) => setContent(e.target.value)}
+                />
+            </EditorWrapper>
         </>
     )
 }
 
 export default connect(
     ({ stories }: AppState) => ({ currentStory: stories.currentStory }),
+    {
+        createStoryAction,
+        updateStoryAction
+    }
 )(Writer);
 
 const typeEdit = keyframes`
@@ -130,19 +186,39 @@ const Placeholder = styled.p<{ isClicked: boolean}>`
     `}
 `;
 
-const Editor = styled(ContentEditable)<{ hasContent: boolean }>`
+const EditorWrapper = styled.div<{ hasContent: boolean; contentIsString: boolean; }>`
+    > div {
+        ${({ hasContent }) =>
+            hasContent ? `opacity: 1;` : `opacity: 0;`
+        }
+        padding-top: ${({ contentIsString }) => contentIsString ? '1.22em' : '0.28em'};
+    }
+`;
+
+const Editor = styled(ContentEditable)`
     font-family: sans-serif;
     outline: 0;
     border: 0;
     width: 75%;
     min-height: 100px;
     resize: none;
-    ${({ hasContent }) =>
-        hasContent ? `opacity: 1;` : `opacity: 0;`
-    }
 `;
 
 // https://codesandbox.io/s/l91xvkox9l
 
 // Next steps:
 // Add a menu on select characters and hide when there is no more selection
+
+// Needs to contain the following tag supports:
+/**
+ * h2
+ * h3
+ * h4
+ * p
+ * blockquote
+ * ol
+ * ul
+ * li
+ * link (a)
+ * linebreak
+ */

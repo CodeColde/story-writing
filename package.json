@@ -14,7 +14,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "sanitize-html": "^1.20.1",
-    "styled-components": "^4.4.1",
+    "styled-components": "^5.0.0",
     "tslint": "^5.20.1",
     "typescript": "3.7.2"
   },

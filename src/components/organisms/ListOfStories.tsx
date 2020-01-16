@@ -13,7 +13,6 @@ interface Props {
 }
 
 const ListOfStories: React.FC<Props> = ({ goBack, stories, selectStoryAction, login }) => {
-    console.log(stories);
     return (
         <div>
             <h3>Showing All Stories</h3>

@@ -20,6 +20,7 @@
 [x] - Copy story to clipboard and paste in word document
 
 ## Markdown and HTML Writing
+[x] - Writer that composes HTML
 [ ] - Markdown writing
 [ ] - Convert it dynamically to HTML
 [ ] - Save as markdown, show as HTML
@@ -52,3 +53,6 @@ https://medium.com/javascript-in-plain-english/how-i-reduced-the-amount-of-code-
 ## User interaction
 [ ] - Browse Stories
 [ ] - Select other user's story
+
+## Assistance Page
+[ ] - Insight about markdown and how it works
